@@ -1,9 +1,52 @@
 <template>
-  <h1 class="text-brand-main">Aqui é a Home</h1>
+  <custom-header
+    @createAccount="handleCreateAccount"
+    @login="handleLogin"
+  />
+  <contact />
+  <div class="flex justify-center py-10 bg-brand-gray">
+    <p class="font-medium text-center text-gray-800">Feedbacker © 2021</p>
+  </div>
 </template>
 
 <script>
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import CustomHeader from './CustomHeader.vue'
+import Contact from './Contact.vue'
+import useModal from '../../hooks/useModal'
+
+export default {
+  components: { CustomHeader, Contact },
+  setup () {
+    const router = useRouter()
+    const modal = useModal()
+
+    onMounted(() => {
+      const token = window.localStorage.getItem('token')
+      if (token) {
+        router.push({ name: 'Feedbacks' }) // se tiver um token no local storage ao montar a pagina enviamos o suario a pagina feedbaks
+      }
+    })
+
+    function handleLogin () {
+      modal.open({
+        component: 'ModalLogin'
+      })
+    }
+
+    function handleCreateAccount () {
+      modal.open({
+        component: 'ModalCreateAccount'
+      })
+    }
+
+    return {
+      handleLogin,
+      handleCreateAccount
+    }
+  }
+}
 </script>
 
-<style>
-</style>
+<style></style>
